@@ -1,0 +1,45 @@
+#backdrop { 
+    background-image: url("../images/ForestRoad.jpg");
+    /* background-size: 100%; */
+    height: 100%;
+    /* background-position: center; */
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#container {
+    background-image: url("../images/PineWood.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0 10% 0 10%;
+    height: 100%;
+    /* display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+}
+
+#jumbotron-1 {
+    /* position: relative; */
+    background-image: url("../images/PineBark.jpg");
+    color: white;
+}
+
+.rowText {
+    color: yellow;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    background-color: rgb(34, 77, 52);
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    padding-top: 10px;
+}
