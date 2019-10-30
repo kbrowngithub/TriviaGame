@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     // Question List
     var qObjects = [{
+        notPlayed: true,
         question: "How do you ...",
         answers: [
             { type: "correct", value: "It is ..." },
@@ -10,6 +11,7 @@ $(document).ready(function () {
             { type: "wrong", value: "It's not ..." }]
     },
     {
+        notPlayed: true,
         question: "What is ...",
         answers: [
             { type: "correct", value: "It is ..." },
@@ -18,6 +20,7 @@ $(document).ready(function () {
             { type: "wrong", value: "It's not ..." }]
     },
     {
+        notPlayed: true,
         question: "Who is ...",
         answers: [
             { type: "correct", value: "It is ..." },
@@ -26,6 +29,7 @@ $(document).ready(function () {
             { type: "wrong", value: "It's not ..." }]
     },
     {
+        notPlayed: true,
         question: "Name the ...",
         answers: [
             { type: "correct", value: "It is ..." },
@@ -35,9 +39,29 @@ $(document).ready(function () {
     }
     ];
 
-    // Randomize our questions index
-    var qCounter = Math.floor(Math.random() * 4);
-    console.log("qCounter = " + qCounter);
+    var playedQuestions = [];
+    console.log("playedQuestions = " + playedQuestions);
+
+    // Randomize our questions index and check to see if we already played that question
+    if (playedQuestions.length === qObjects.length) {
+        $(".question").text("GAME OVER!");
+    }
+    else {
+        var played = true;
+        while (played) {
+            console.log("played = " + played);
+            var qCounter = Math.floor(Math.random() * 4);
+            console.log("qObjects[qCounter].notPlayed = " + qObjects[qCounter].notPlayed);
+            if (qObjects[qCounter].notPlayed) {
+                played = false;
+                playedQuestions.push(qObjects.question);
+                console.log("playedQuestions = " + playedQuestions.toString);
+                // So we don't play this question again
+                qObjects[qCounter].notPlayed = false;
+            }
+            console.log("Loaded up question " + qObjects[qCounter].question);
+        }
+    }
 
     // Used the Fisher-Yates algorithm to always shuffle our answers
     function shuffle(array) {
@@ -59,16 +83,43 @@ $(document).ready(function () {
         }
     }
 
-    // Set our HTML element values
-    $(".timer").text("Time Remaining: " + 15 + " seconds");
+    // Kick off the timer
+    var time = 15, display = $(".timer");
+    startTimer(time, display);
+
+    // Set our question and answers
     $(".question").text(qObjects[qCounter].question);
     populateAnswers(qObjects[qCounter].answers);
 
-    $(".answers").click(function(event) {
+    // Listen for a click event
+    $(".answers").click(function (event) {
         console.log("$(this).val(value) = " + $(this).attr("value"));
         if ($(this).attr("value") === "correct") {
             $(".question").text("CORRECT!");
         }
-
     });
+
+    // Timer function
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+            display.text("Time Remaining: " + seconds + " seconds");
+    
+            if (--timer < 0) {
+                clearInterval(1000);
+                //counter ended
+                display.text("Time's Up!");
+                return;
+            }
+        }, 1000);
+    }
+    
+    // jQuery(function ($) {
+    //     var time = 30, display = $(".timer");
+    //     startTimer(time, display);
+    // });
 });
