@@ -5,70 +5,70 @@ $(document).ready(function () {
         question: "How do you ...",
         answers: [
             { type: "correct", value: "It is ..." },
-            { type: "wrong1", value: "It's not ..." },
-            { type: "wrong2", value: "It's not ..." },
-            { type: "wrong3", value: "It's not ..." }]
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." }]
     },
     {
         question: "What is ...",
         answers: [
             { type: "correct", value: "It is ..." },
-            { type: "wrong1", value: "It's not ..." },
-            { type: "wrong2", value: "It's not ..." },
-            { type: "wrong3", value: "It's not ..." }]
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." }]
     },
     {
         question: "Who is ...",
         answers: [
             { type: "correct", value: "It is ..." },
-            { type: "wrong1", value: "It's not ..." },
-            { type: "wrong2", value: "It's not ..." },
-            { type: "wrong3", value: "It's not ..." }]
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." }]
     },
     {
         question: "Name the ...",
         answers: [
             { type: "correct", value: "It is ..." },
-            { type: "wrong1", value: "It's not ..." },
-            { type: "wrong2", value: "It's not ..." },
-            { type: "wrong3", value: "It's not ..." }]
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." },
+            { type: "wrong", value: "It's not ..." }]
     }
     ];
-
-    // Get our HTML elements using jQuery
-    var timer = $(".timer");
-    var question = $(".question");
-    var ans1 = $(".answer1");
-    var ans2 = $(".answer2");
-    var ans3 = $(".answer3");
-    var ans4 = $(".answer4");
 
     // Randomize our questions index
     var qCounter = Math.floor(Math.random() * 4);
     console.log("qCounter = " + qCounter);
 
-    // Fisher-Yates algorithm to shuffle our answer array
-    function shuffleAnswers(array) {
+    // Used the Fisher-Yates algorithm to always shuffle our answers
+    function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
             // Switch around array elements based on the random index we just generated
             [array[i], array[j]] = [array[j], array[i]];
         }
-        // Display our answers
-        console.log("array.length = " + array.length)
-        for (i = 0; i < array.length; i++) {
-            console.log("i = " + i);
-            $(".answer" + i).text(array[i].value);
-            console.log("array[i].value = " + array[i].value);
+        return array;
+    }
+
+    // Display the answers
+    function populateAnswers(array) {
+        var thisArray = shuffle(array);
+        for (i = 0; i < thisArray.length; i++) {
+            $(".answer" + i).text(thisArray[i].value);
+            $(".answer" + i).attr("value", thisArray[i].type);
+            console.log("Set att to " + $(".answer" + i).attr("value"));
         }
     }
 
     // Set our HTML element values
-    timer.text("Time Remaining: " + 15 + " seconds");
-    console.log("qObject = " + qObjects[qCounter].question);
+    $(".timer").text("Time Remaining: " + 15 + " seconds");
+    $(".question").text(qObjects[qCounter].question);
+    populateAnswers(qObjects[qCounter].answers);
 
-    question.text(qObjects[qCounter].question);
-    shuffleAnswers(qObjects[qCounter].answers);
+    $(".answers").click(function(event) {
+        console.log("$(this).val(value) = " + $(this).attr("value"));
+        if ($(this).attr("value") === "correct") {
+            $(".question").text("CORRECT!");
+        }
 
-
+    });
 });
