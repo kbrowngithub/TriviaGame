@@ -39,7 +39,9 @@ $(document).ready(function () {
     }
     ];
 
+    var qCounter = 0;
     var playedQuestions = [];
+    var correctAnswer;
     console.log("playedQuestions = " + playedQuestions);
 
     function loadQuestion() {
@@ -51,7 +53,7 @@ $(document).ready(function () {
             var played = true;
             while (played) {
                 console.log("played = " + played);
-                var qCounter = Math.floor(Math.random() * 4);
+                qCounter = Math.floor(Math.random() * 4);
                 console.log("qObjects[qCounter].notPlayed = " + qObjects[qCounter].notPlayed);
                 if (qObjects[qCounter].notPlayed) {
                     played = false;
@@ -69,6 +71,7 @@ $(document).ready(function () {
 
     // Used the Fisher-Yates algorithm to always shuffle our answers
     function shuffle(array) {
+        correctAnswer = qObjects[qCounter].answers[0].value;
         for (let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
             // Switch around array elements based on the random index we just generated
@@ -88,31 +91,32 @@ $(document).ready(function () {
     }
 
     // Timer function
-    function startTimer(duration, display) {
-        var timer = duration, minutes, seconds;
+    function startTimer() {
+        var timer = 5, minutes, seconds;
         setInterval(function () {
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
             seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            display.text("Time Remaining: " + seconds + " seconds");
+            $(".timer").text("Time Remaining: " + seconds + " seconds");
 
             if (--timer < 0) {
                 clearInterval(1000);
                 //counter ended
-                display.text("Time's Up!");
-                var time = 
-                startDelayTimer(3);
+                $(".timer").text("Time's Up!");
+                $(".question").text("The correct answer was: " + correctAnswer);
+                var time = 3;
+                startDelayTimer(time);
                 return;
             }
         }, 1000);
     }
 
     // Inter-Question Timer
-    function startDelayTimer(time) {
+    function startDelayTimer() {
         var display = $(".question");
         function startTimer(time, display) {
-            var timer = duration, minutes, seconds;
+            var timer = 3, minutes, seconds;
             setInterval(function () {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
@@ -128,14 +132,12 @@ $(document).ready(function () {
         }
     }
 
-    function resetDisplay(time) {
-        var display = $(".timer");
-
+    function resetDisplay() {
         // Load Questions and Answers
         loadQuestion();
 
         // Kick off the timer
-        startTimer(time, display);
+        startTimer();
 
         return;
     }
@@ -148,6 +150,7 @@ $(document).ready(function () {
         console.log("$(this).val(value) = " + $(this).attr("value"));
         if ($(this).attr("value") === "correct") {
             $(".question").text("CORRECT!");
+            resetDisplay(qTime);
         }
     });
 
