@@ -1,47 +1,69 @@
-$(document).ready(function () {
-
     // Question List
     var qObjects = [{
         notPlayed: true,
-        question: "How do you ...",
+        question: "Which is an alternative term for backpacking?",
         answers: [
-            { type: "correct", value: "It is ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." }]
+            { type: "correct", value: "Trudging" },
+            { type: "wrong", value: "Kayaking" },
+            { type: "wrong", value: "Tramping" },
+            { type: "wrong", value: "Backing" }],
+        img: "assets/images/BackPacking.gif"
     },
     {
         notPlayed: true,
-        question: "What is ...",
+        question: "What's the single most important thing needed to survive in the wild?",
         answers: [
-            { type: "correct", value: "It is ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." }]
+            { type: "correct", value: "Water" },
+            { type: "wrong", value: "Food" },
+            { type: "wrong", value: "Shelter" },
+            { type: "wrong", value: "Fire" }],
+        img: "assets/images/DrinkingWater.gif"
     },
     {
         notPlayed: true,
-        question: "Who is ...",
+        question: "If you're looking for insects to eat, which ones should you avoid?",
         answers: [
-            { type: "correct", value: "It is ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." }]
+            { type: "correct", value: "Bright Ones" },
+            { type: "wrong", value: "Big Ones" },
+            { type: "wrong", value: "Stinky Ones" },
+            { type: "wrong", value: "All of Them" }],
+        img: "assets/images/Mantis.webp"
     },
     {
         notPlayed: true,
-        question: "Name the ...",
+        question: "It's a good idea to build your shelter near what?",
         answers: [
-            { type: "correct", value: "It is ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." },
-            { type: "wrong", value: "It's not ..." }]
+            { type: "correct", value: "A Water Source" },
+            { type: "wrong", value: "Cliffs" },
+            { type: "wrong", value: "Dry River Beds" },
+            { type: "wrong", value: "A Horse" }],
+        img: "assets/images/WaterSource.webp"
+    },
+    {
+        notPlayed: true,
+        question: "What type of food or beverages should you AVOID in case of hypothermia?",
+        answers: [
+            { type: "correct", value: "Caffeine" },
+            { type: "wrong", value: "Hot Chocolate" },
+            { type: "wrong", value: "Trail Mix" },
+            { type: "wrong", value: "Broccoli" }],
+        img: "assets/images/BadCoffee.webp"
+    },
+    {
+        notPlayed: true,
+        question: "Which symptom determines if you are experiencing severe dehydration?",
+        answers: [
+            { type: "correct", value: "Vomiting/Diarrhea" },
+            { type: "wrong", value: "Dry Mouth" },
+            { type: "wrong", value: "Rapid Heartbeat" },
+            { type: "wrong", value: "Excessive Sweating" }]
     }
     ];
 
     var qCounter = 0;
     var playedQuestions = [];
     var correctAnswer;
+    var timer = 5;
     console.log("playedQuestions = " + playedQuestions);
 
     function loadQuestion() {
@@ -90,68 +112,42 @@ $(document).ready(function () {
         }
     }
 
+    loadQuestion();
+    loadAnswers(qObjects[qCounter].answers);
+
     // Timer function
-    function startTimer() {
-        var timer = 5, minutes, seconds;
-        setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+    // function startTimer() {
+    var timer = 5, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            $(".timer").text("Time Remaining: " + seconds + " seconds");
+        $(".timer").text("Time Remaining: " + seconds + " seconds");
 
-            if (--timer < 0) {
-                clearInterval(1000);
-                //counter ended
-                $(".timer").text("Time's Up!");
-                $(".question").text("The correct answer was: " + correctAnswer);
-                var time = 3;
-                startDelayTimer(time);
-                return;
-            }
-        }, 1000);
-    }
+        if (--timer < 0) {
+            $(".timer").text("Time's Up!");
+            $(".question").text("The correct answer was: " + correctAnswer);
+            timer = 5;
+            loadQuestion();
+            loadAnswers(qObjects[qCounter].answers);
 
-    // Inter-Question Timer
-    function startDelayTimer() {
-        var display = $(".question");
-        function startTimer(time, display) {
-            var timer = 3, minutes, seconds;
-            setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                if (--timer < 0) {
-                    clearInterval(1000);
-                    //counter ended
-                    resetDisplay();
-                    return;
-                }
-            }, 1000);
+            // let timerId = setTimeout(() => {resetDisplay(); timer = 5}, 3000);
         }
-    }
 
-    function resetDisplay() {
-        // Load Questions and Answers
-        loadQuestion();
-
-        // Kick off the timer
-        startTimer();
-
-        return;
-    }
-
-    var qTime = 5, pTime = 3;
-    resetDisplay(qTime);
+        // clearInterval(1000);
+        // return;
+    }, 1000);
 
     // Listen for a click event
     $(".answers").click(function (event) {
+        clearInterval(1000);
         console.log("$(this).val(value) = " + $(this).attr("value"));
         if ($(this).attr("value") === "correct") {
             $(".question").text("CORRECT!");
-            resetDisplay(qTime);
         }
+        else {
+            $(".question").text("INCORRECT!");
+        }
+        // resetDisplay(qTime);
     });
-
-});
