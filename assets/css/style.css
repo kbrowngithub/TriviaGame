@@ -1,37 +1,90 @@
+html {
+  height: 100%;
+}
+
 #backdrop { 
-    background-image: url("../images/ForestRoad.jpg");
+    background-image: url("../images/CartoonForestLakeBkGnd.jpg");
     /* background-size: 100%; */
     height: 100%;
     /* background-position: center; */
     background-repeat: no-repeat;
     background-size: cover;
+    text-align: center;
+
+}
+#wrapper {
+  width: 960px;
+  height: 90%;
+  box-sizing: border-box;
+  margin: 4% auto;
+  background-color: indianred;
 }
 
 #container {
-    background-image: url("../images/PineWood.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: 0 10% 0 10%;
-    height: 100%;
-    /* display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); */
-}
+    position: relative;
+    top: 15%;
+  }
 
-#jumbotron-1 {
-    /* position: relative; */
-    background-image: url("../images/PineBark.jpg");
-    color: white;
-}
+button {
+    background: transparent;
+    display: block;
+    width: 40%;
+    height: 20%;
+    margin: 0 auto;
+    font-size: 40px;
+    cursor: pointer;
+    border: 0;
+  }
 
-.rowText {
-    color: yellow;
-}
+  button:hover {
+    background: blanchedalmond;
+    border: 2px solid black;
+  }
+  
+  #start {
+    margin-top: 10%;
+    background: khaki;
+    border: 2px solid black;
+    border-radius: 25px;
+  }
 
-.footer {
+  #play-again {
+    margin-top: 10%;
+    background: khaki;
+    border: 2px solid black;
+    border-radius: 25px;
+  }
+  
+  button:hover {
+    background: blanchedalmond;
+    border: 2px solid black;
+  }
+
+  img {
+    height: 200px;
+    /* width: 200px; */
+  }
+
+  h1 {
+    font-family: cursive;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    font-size: 4em;
+    font-weight: bold;
+    background: khaki;
+  }
+  
+  h2 {
+    font-size: 36px;
+    margin-bottom: 26px;
+  }
+  
+  h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+/* .footer {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -42,4 +95,4 @@
     font-size: 10px;
     font-weight: bold;
     padding-top: 10px;
-}
+} */

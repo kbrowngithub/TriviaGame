@@ -1,6 +1,5 @@
 // Question List
-var qObjects = [{
-    notPlayed: true,
+var questionList = [{
     question: "Which is an alternative term for backpacking?",
     answers: [
         { type: "correct", value: "Trudging" },
@@ -10,7 +9,6 @@ var qObjects = [{
     img: "assets/images/BackPacking.gif"
 },
 {
-    notPlayed: true,
     question: "What's the single most important thing needed to survive in the wild?",
     answers: [
         { type: "correct", value: "Water" },
@@ -20,7 +18,6 @@ var qObjects = [{
     img: "assets/images/DrinkingWater.gif"
 },
 {
-    notPlayed: true,
     question: "If you're looking for insects to eat, which ones should you avoid?",
     answers: [
         { type: "correct", value: "Bright Ones" },
@@ -30,7 +27,6 @@ var qObjects = [{
     img: "assets/images/Mantis.webp"
 },
 {
-    notPlayed: true,
     question: "It's a good idea to build your shelter near what?",
     answers: [
         { type: "correct", value: "A Water Source" },
@@ -40,7 +36,6 @@ var qObjects = [{
     img: "assets/images/WaterSource.webp"
 },
 {
-    notPlayed: true,
     question: "What type of food or beverages should you AVOID in case of hypothermia?",
     answers: [
         { type: "correct", value: "Caffeine" },
@@ -50,57 +45,59 @@ var qObjects = [{
     img: "assets/images/BadCoffee.webp"
 },
 {
-    notPlayed: true,
     question: "Which symptom determines if you are experiencing severe dehydration?",
     answers: [
         { type: "correct", value: "Vomiting/Diarrhea" },
         { type: "wrong", value: "Dry Mouth" },
         { type: "wrong", value: "Rapid Heartbeat" },
-        { type: "wrong", value: "Excessive Sweating" }]
+        { type: "wrong", value: "Excessive Sweating" }],
+    img: "assets/images/Vomit.webp"
 }
 ];
 
-var qCounter = 0; // Question index
-var playedQuestions = []; // Holds the ?s we've already played
+
+// var playedQuestions = []; // Holds the ?s we've already played
 var correctAnswer; // Holds the current correct answer
 var timeToAnswer = 5; // Seconds to answer
 var intervalTimer; // Holds the interval id
 var gameDisplay = $("#game"); // Game Area
 
 var gameObj = {
+    qCounter: -1, // Question index
     time: timeToAnswer,
-    questionList: qObjects,
-    currQuestion: 0,
+    questionList: questionList,
     correctCounter: 0,
     incorrectCounter: 0,
 
     loadQuestion: function () {
+        this.qCounter++;
         // Randomize our questions index and check to see if we already played that question
-        if (playedQuestions.length === qObjects.length) {
-            $(".question").text("GAME OVER!");
-        }
-        else {
-            var played = true;
-            while (played) {
-                console.log("played = " + played);
-                qCounter = Math.floor(Math.random() * 4);
-                console.log("qObjects[qCounter].notPlayed = " + qObjects[qCounter].notPlayed);
-                if (qObjects[qCounter].notPlayed) {
-                    played = false;
-                    playedQuestions.push(qObjects.question);
-                    console.log("playedQuestions = " + playedQuestions.toString);
-                    // So we don't play this question again
-                    qObjects[qCounter].notPlayed = false;
-                }
-                console.log("Loaded up question " + qObjects[qCounter].question);
-            }
-        }
-        $(".question").text(qObjects[qCounter].question);
-        loadAnswers(qObjects[qCounter].answers);
+        // for (i = 0; i < questionList.length; i++) {
+        //     qCounter = Math.floor(Math.random() * questionList.length);
+        //     console.log("questionList[qCounter].notPlayed = " + questionList[qCounter].notPlayed);
+        //     if (questionList[qCounter].notPlayed) {
+        //         played = false;
+        //         playedQuestions.push(questionList.question);
+        //         console.log("playedQuestions = " + playedQuestions.toString);
+        //         // So we don't play this question again
+        //         questionList[qCounter].notPlayed = false;
+        //     }
+        //     console.log("Loaded up question " + questionList[qCounter].question);
+        // }
+
+        // Display the current question
+        gameDisplay.html("<h2>" + questionList[this.qCounter].question + "</h2>");
+        gameObj.loadAnswers(questionList[this.qCounter].answers);
+
+        // Start our countdown for this question at 1 second intervals
+        intervalTimer = setInterval(gameObj.gameTimer, 1000);
     },
 
     shuffle: function (array) {
-        correctAnswer = qObjects[qCounter].answers[0].value;
+        // Correct Answer is always first in the array so grab it before we shuffle
+        correctAnswer = questionList[this.qCounter].answers[0].value;
+
+        // Shuffle the answers using Fisher-Yates algorithm
         for (let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
             // Switch around array elements based on the random index we just generated
@@ -110,71 +107,162 @@ var gameObj = {
     },
 
     loadAnswers: function (array) {
-        var thisArray = shuffle(array);
+        var thisArray = this.shuffle(array);
+
         for (i = 0; i < thisArray.length; i++) {
-            $(".answer" + i).text(thisArray[i].value);
-            $(".answer" + i).attr("value", thisArray[i].type);
-            console.log("Set att to " + $(".answer" + i).attr("value"));
+            // $(".answer" + i).text(thisArray[i].value);
+            // $(".answer" + i).attr("value", thisArray[i].type);
+            gameDisplay.append("<button class='answer' id='button' value='" + thisArray[i].type + "'>" + thisArray[i].value + "</button>");
         }
     },
 
     gameTimer: function () {
+        // Decrement countdown timer
         gameObj.time--;
+
+        // Upate display with current countdown value
         $("#countDown").text(gameObj.time);
-        if (gameObj.counter === 0) {
-            gameObj.timeUp();
+
+        // Handle out of time condition
+        if (gameObj.time === 0) {
+            gameObj.clearTimer();
         }
     },
 
+    clearTimer: function () {
+        // Clear timer
+        clearInterval(intervalTimer);
 
+        // Update Display
+        gameDisplay.html("<h2>Time's Up!</h2>");
+        gameDisplay.append("<h3>The Correct Answer was: " + correctAnswer);
+        gameDisplay.append("<img src='" + questionList[this.qCounter].img + "' />");
+        $("#countDown").html(gameObj.time);
+
+        console.log("clearTimer: If (" + this.qCounter + "===" + (questionList.length - 1));
+        if (this.qCounter === (questionList.length - 1)) {
+            // If the game is over display the results
+            setTimeout(gameObj.stats, 3000);
+        }
+        else {
+            // Load up the next question
+            setTimeout(gameObj.loadNext, 3000);
+        }
+    },
+
+    stats: function () {
+        // Clear timer
+        clearInterval(intervalTimer);
+
+        // Update Display
+        gameDisplay.html("<h2>GAME OVER!</h2>");
+        $("#countDown").text(gameObj.time);
+        gameDisplay.append("<h3>Correct: " + gameObj.correctCounter + "</h3>");
+        gameDisplay.append("<h3>Incorrect: " + gameObj.incorrectCounter + "</h3>");
+        gameDisplay.append("<h3>Unanswered: " + (questionList.length - (gameObj.correctCounter + gameObj.incorrectCounter)) + "</h3><br>");
+        gameDisplay.append("<button id='play-again'>Click to Play Again</button>");
+    },
+
+    wrongAnswer: function () {
+        // Clear timer
+        clearInterval(intervalTimer);
+
+        // Increment wrong answers
+        gameObj.incorrectCounter++;
+
+        // Update Display
+        gameDisplay.html("<h2>Sorry!</h2>");
+        gameDisplay.append("<h3>The Correct Answer was: " + correctAnswer + "</h3>");
+        gameDisplay.append("<img src='" + questionList[this.qCounter].img + "' />");
+
+        // Game over or continue
+        console.log("wrongAnswer: If (" + this.qCounter + "===" + (questionList.length - 1));
+        if (this.qCounter === (questionList.length - 1)) {
+            setTimeout(gameObj.stats, 3000);
+        }
+        else {
+            // Load up the next question
+            setTimeout(gameObj.loadNext, 3000);
+        }
+    },
+
+    correctAnswer: function () {
+        // Clear timer
+        clearInterval(intervalTimer);
+        // Increment correct answers
+        gameObj.correctCounter++;
+
+        // Update Display
+        gameDisplay.html("<h2>CORRECT!</h2>");
+        gameDisplay.append("<img src='" + questionList[this.qCounter].img + "' />");
+
+        // Game over or continue
+        console.log("correctAnswer: If (" + this.qCounter + "===" + (questionList.length - 1));
+        if (this.qCounter === (questionList.length - 1)) {
+            setTimeout(gameObj.stats, 3000);
+        }
+        else {
+            // Load up the next question
+            setTimeout(gameObj.loadNext, 3000);
+        }
+    },
+
+    loadNext: function () {
+        // Reset our countdown value
+        gameObj.time = timeToAnswer;
+
+        // Display countdown
+        $("#countDown").text(gameObj.time);
+
+        // Load Question
+        gameObj.loadQuestion();
+    },
+
+    resetDisplay: function () {
+        // Reset counter values
+        this.time = timeToAnswer;
+        this.correctCounter = 0;
+        this.incorrectCounter = 0;
+        this.qCounter = -1;
+
+        // Load first question
+        this.loadQuestion();
+    },
+
+    answerSelected: function (event) {
+        // Clear timer
+        clearInterval(intervalTimer);
+
+        // Update Answer Counters
+        if ($(event.target).attr("value") === "correct") {
+            this.correctAnswer();
+        }
+        else {
+            this.wrongAnswer();
+        }
+    },
 };
 
+//
+// Handle these click events
+//
 
-// Timer function
-// function startTimer() {
-// var timer = 5, minutes, seconds;
-// setInterval(function () {
-//     minutes = parseInt(timer / 60, 10);
-//     seconds = parseInt(timer % 60, 10);
-//     seconds = seconds < 10 ? "0" + seconds : seconds;
-
-//     $(".timer").text("Time Remaining: " + seconds + " seconds");
-
-//     if (--timer < 0) {
-//         $(".timer").text("Time's Up!");
-//         $(".question").text("The correct answer was: " + correctAnswer);
-//         timer = 5;
-//         loadQuestion();
-//         loadAnswers(qObjects[qCounter].answers);
-
-//         // let timerId = setTimeout(() => {resetDisplay(); timer = 5}, 3000);
-//     }
-
-    // clearInterval(1000);
-    // return;
-// }, 1000);
-
-// Listen for a click event
-$(document).on("click", "#start", function() {
+// Start Button
+$(document).on("click", "#start", function () {
     // Display the timer
-    $("#container").prepend("<h2>Time Remaining: <span id='countDown'>"+timeToAnswer+"</span> Seconds</h2>");
+    $("#container").prepend("<h2>Time Remaining: <span id='countDown'>" + timeToAnswer + "</span> Seconds</h2>");
 
     // Load a question
-    game.loadQuestion();
-  });
+    gameObj.loadQuestion();
+});
 
-// loadQuestion();
-// loadAnswers(qObjects[qCounter].answers);
+// Answer Buttons
+$(document).on("click", ".answer", function (event) {
+    gameObj.answerSelected(event);
+});
 
-// Listen for a click event
-// $(".answers").click(function (event) {
-//     clearInterval(1000);
-//     console.log("$(this).val(value) = " + $(this).attr("value"));
-//     if ($(this).attr("value") === "correct") {
-//         $(".question").text("CORRECT!");
-//     }
-//     else {
-//         $(".question").text("INCORRECT!");
-//     }
-//     // resetDisplay(qTime);
-// });
+// Play Again Button
+$(document).on("click", "#play-again", function () {
+    gameObj.resetDisplay();
+});
+
