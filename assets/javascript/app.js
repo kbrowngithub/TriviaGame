@@ -58,7 +58,7 @@ var questionList = [{
 
 // var playedQuestions = []; // Holds the ?s we've already played
 var correctAnswer; // Holds the current correct answer
-var timeToAnswer = 5; // Seconds to answer
+var timeToAnswer = 8; // Seconds to answer
 var intervalTimer; // Holds the interval id
 var gameDisplay = $("#game"); // Game Area
 
