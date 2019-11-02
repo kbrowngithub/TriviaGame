@@ -73,11 +73,28 @@ Technology Requirements:
  ### Game Link: https://kbrowngithub.github.io/TriviaGame/
  
  # Features
- ##### TBD
+ #####
 ```
  
- 
+ Start Screen
 
  ```
- <img width="977" alt="Start Screen Shot" src="assets/images/somefile.PNG">
+ <img width="977" alt="Start Screen Shot" src="assets/images/StartScreen.PNG">
+ 
+ ```
+ 
+ Play Screen
+
+ ```
+
+ <img width="977" alt="Start Screen Shot" src="assets/images/PlayScreen.PNG">
+ 
+ ```
+ 
+ Play Again Screen
+
+  ```
+
+ <img width="977" alt="Start Screen Shot" src="assets/images/PlayAgainScreen.PNG">
+
  
